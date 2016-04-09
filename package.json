@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/nat-nat33/Buzz-Word-Bing/issues"
   },
-  "homepage": "https://github.com/nat-nat33/Buzz-Word-Bing#readme"
+  "homepage": "https://github.com/nat-nat33/Buzz-Word-Bing#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
 }
