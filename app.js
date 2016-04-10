@@ -1,49 +1,27 @@
 var express = require('express');
-var app = express();
 var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
-var buzzObject = [];
+var app = express();
+
+var buzzwordRoute = require('./routes/buzzwords');
+var resetRoute = require('./routes/routesReset');
+
+var bingo = {
+  buzzWords : [],
+  score : 0
+};
 
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended : true }));
-
-app.get('/buzzwords', function(req, res){
-  res.json({ buzzWords : buzzObject});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use( function(req, res, next) {
+  req.bingo = bingo;
+  next();
 });
-
-app.post('/buzzwords', function(req, res){
-  var objArr = Object.keys(req.body);
-  if (objArr.length === 0){
-    return res.status(400).send('error body empty');
-  }
-  if (typeof req.body.buzzword === 'string' &&
-    req.body.hasOwnProperty('score')){
-    req.body.score = Number(req.body.score);
-    buzzObject.push(req.body);
-  }
-});
-
-app.put('/buzzwords', function(req, res){
-  if (!req.body){
-    return res.sendStatus(400);
-  }
-  for (var i = 0; i < buzzObj.length; i++){
-    console.log('buzzObj.buzzword',buzzObj[i].buzzword);
-    console.log('req.body.buzzword',req.body.buzzword);
-    console.log(req.body.buzzword === buzzObj[i].buzzword);
-    if ((buzzObj[i].buzzword == req.body.buzzword) &&
-      req.body.hasOwnProperty('heard')){
-      buzzObj[i].heard = Boolean(req.body.heard);
-    console.log('buzzObj[i]',buzzObj[i]);
-      return res.send({ "success" : true, "newScore" : buzzObj.score });
-    }
-
-  }
-});
+app.use('/buzzwords,', buzzwordRoute);
+app.use('/routesReset', resetRoute);
 
 
-
-
-var server = app.listen(3000, function(){
-  console.log("connected");
+var server = app.listen(3000, function() {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Example app listening at http://%s%s', host, port);
 });
